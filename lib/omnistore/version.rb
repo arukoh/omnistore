@@ -1,0 +1,3 @@
+module OmniStore
+  VERSION = "0.0.1"
+end
