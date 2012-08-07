@@ -7,7 +7,7 @@ module OmniStore
 
     option :logger,     :default => defined?(Rails)
     option :storage,    :default => 'local'
-    option :mountpoint, :default => File.join(defined?(Rails) ? Rails.root : '/tmp', 'data')
+    option :mountpoint, :default => '/tmp/data'
     option :access_key
     option :secret_key
     option :endpoint
