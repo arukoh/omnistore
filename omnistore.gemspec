@@ -4,8 +4,8 @@ require File.expand_path('../lib/omnistore/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["arukoh"]
   gem.email         = ["arukoh10@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Providers a single point of entry for storage}
+  gem.summary       = %q{Providers a single point of entry for storage}
   gem.homepage      = "https://github.com/arukoh/omnistore"
 
   gem.files         = `git ls-files`.split($\)
