@@ -5,23 +5,59 @@ module OmniStore
     module S3
       extend self
 
-      @@bucket = nil
+      class Mountpoint
+        attr_reader :bucket
+
+        def initialize(bucket)
+          @bucket = bucket
+        end
+
+        def exist?(key)
+          bucket.objects[key].exists?
+        end
+
+        def delete(key, options = {})
+          bucket.objects[key].delete(options)
+        end
+
+        def write(key, options_or_data = nil, options = nil)
+          bucket.objects[key].write(options_or_data, options)
+        end
+      end
 
       def mount!
-        bucket = AWS::S3.new(options).buckets[OmniStore::Config.mountpoint]
-        raise OmniStore::Errors::InvalidMountpoint unless bucket.exists?
-        @@bucket = bucket
+        @@buckets = {}
+        case mountpoint = OmniStore::Config.mountpoint
+        when Array then mountpoint.each {|m| b = validate(m); @@buckets[m] = Mountpoint.new(b) }
+        when Hash  then mountpoint.each {|k,v| b = validate(v); @@buckets[k] = Mountpoint.new(b) }
+        else m = mountpoint.to_s; b = validate(m); @@buckets[m] = Mountpoint.new(b)
+        end
+      end
+
+      def mountpoint(key)
+        @@buckets[key]
       end
 
       def exist?(path)
-        @@bucket.objects[path].exists?
+        @@buckets.values.find {|b| b.exist?(path) }
+      end
+      alias :find :exist?
+
+      def delete(path, options = {})
+        @@buckets.values.each {|b| b.delete(path, options) }
       end
 
       def write(path, options_or_data = nil, options = nil)
-        @@bucket.objects[path].write(options_or_data, options)
+        @@buckets.values.each {|b| b.write(path, options_or_data, options) }
       end
 
       private
+
+      def validate(name)
+        bucket = AWS::S3.new(options).buckets[name]
+        raise OmniStore::Errors::InvalidMountpoint unless bucket.exists?
+        bucket
+      end
 
       def options
         opts = {}

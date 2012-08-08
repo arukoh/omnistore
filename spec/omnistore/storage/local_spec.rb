@@ -3,6 +3,12 @@ require 'fileutils'
 
 describe OmniStore::Storage::Local do
 
+  before(:each) do
+    OmniStore::Config.storage = 'local'
+    OmniStore::Config.mountpoint = MOUNTPOINT
+    OmniStore::Storage.remount!
+  end
+
   it 'should mount' do
     OmniStore::Storage::Local.mount!.should_not be_nil
   end
@@ -14,9 +20,14 @@ describe OmniStore::Storage::Local do
 
   it 'should exist' do
     path = 'test.txt'
-    FileUtils.touch(File.join(OmniStore::Config.mountpoint, path))
-    OmniStore::Storage::Local.exist?(path).should be_true
-    OmniStore::Storage::Local.exist?(path+'.bk').should be_false
+    expand_path = File.expand_path(path, OmniStore::Config.mountpoint)
+    FileUtils.touch(expand_path)
+    begin
+      OmniStore::Storage::Local.exist?(path).should be_true
+      OmniStore::Storage::Local.exist?(path+'.bk').should be_false
+    ensure
+      OmniStore::Storage::Local.delete(path)
+    end
   end
 
 end

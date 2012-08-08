@@ -5,7 +5,7 @@ describe "OmniStore::Storage::S3" do
 
   before(:each) do
     OmniStore::Config.storage = 's3'
-    OmniStore::Config.mountpoint = ENV['AWS_BUCKET']
+    OmniStore::Config.mountpoint = AWS_BUCKET
     OmniStore::Storage.remount!
   end
 
@@ -19,10 +19,14 @@ describe "OmniStore::Storage::S3" do
   end
 
   it 'should exist' do
-    path = 'test.txt'
-    OmniStore::Storage::S3.write(path, '')
-    OmniStore::Storage::S3.exist?(path).should be_true
-    OmniStore::Storage::S3.exist?(path+'.bk').should be_false
+    key = 'test.txt'
+    OmniStore::Storage::S3.write(key, '')
+    begin
+      OmniStore::Storage::S3.exist?(key).should be_true
+      OmniStore::Storage::S3.exist?(key+'.bk').should be_false
+    ensure
+      OmniStore::Storage::S3.delete(key)
+    end
   end
 
 end

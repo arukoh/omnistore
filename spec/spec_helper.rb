@@ -7,6 +7,8 @@ require 'aws-sdk'
 require 'omnistore'
 
 MOUNTPOINT = File.join(File.dirname(__FILE__), '/../data')
+AWS_BUCKET = ENV['AWS_BUCKET']
+
 OmniStore.configure do |config|
   config.storage = 'local'
   config.mountpoint = MOUNTPOINT
@@ -26,6 +28,5 @@ RSpec.configure do |config|
     OmniStore::Config.reset_endpoint
     OmniStore::Config.reset_proxy_uri
     OmniStore.logger.level = Logger::FATAL
-    FileUtils.rm_rf(Dir.glob(File.join(MOUNTPOINT, '*')))
   end
 end
