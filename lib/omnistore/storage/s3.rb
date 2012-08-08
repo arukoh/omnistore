@@ -23,6 +23,11 @@ module OmniStore
         def write(key, options_or_data = nil, options = nil)
           bucket.objects[key].write(options_or_data, options)
         end
+
+        def move(src, dest, other = self, options = {})
+          options[:bucket_name] = other.bucket.name
+          bucket.objects[key].move_to(dest, options)
+        end
       end
 
       def mount!

@@ -6,6 +6,7 @@ require 'rspec'
 require 'aws-sdk'
 require 'omnistore'
 
+TMPDIR   = ENV['TMPDIR'] || ENV['TMP'] || ENV['TEMP'] || '/tmp'
 MOUNTPOINT = File.join(File.dirname(__FILE__), '/../data')
 AWS_BUCKET = ENV['AWS_BUCKET']
 

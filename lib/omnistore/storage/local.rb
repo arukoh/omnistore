@@ -11,11 +11,23 @@ module OmniStore
         end
 
         def exist?(path)
-          File.exist?(File.expand_path(path, dir))
+          File.exist?(expand(path))
         end
 
         def delete(path)
-          FileUtils.rm_f(File.expand_path(path, dir))
+          FileUtils.rm(expand(path))
+        end
+
+        def move(src, dest, other = self, options = {})
+          src_path = expand(src)
+          dest_path = expand(dest, other.dir)
+          FileUtils.mv(src_path, dest_path, options)
+        end
+
+        private
+
+        def expand(path, dir = @dir)
+          File.expand_path(path, dir)
         end
       end
 
@@ -35,7 +47,6 @@ module OmniStore
       def exist?(path)
         @@mountpoint.values.find {|m| m.exist?(path) }
       end
-      alias :find :exist?
 
       def delete(path)
         @@mountpoint.values.each {|m| m.delete(path) }
