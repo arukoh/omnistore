@@ -8,8 +8,17 @@ module OmniStore
       class Mountpoint
         attr_reader :bucket
 
-        def initialize(bucket)
+        def initialize(name, bucket)
+          @name   = name
           @bucket = bucket
+        end
+
+        def name
+          @name
+        end
+
+        def url
+          bucket.url
         end
 
         def exist?(key)
@@ -20,7 +29,7 @@ module OmniStore
           bucket.objects[key].delete(options)
         end
 
-        def write(key, options_or_data = nil, options = nil)
+        def write(key, options_or_data = nil, options = {})
           bucket.objects[key].write(options_or_data, options)
         end
 
@@ -33,27 +42,35 @@ module OmniStore
       def mount!
         @@buckets = {}
         case mountpoint = OmniStore::Config.mountpoint
-        when Array then mountpoint.each {|m| b = validate(m); @@buckets[m] = Mountpoint.new(b) }
-        when Hash  then mountpoint.each {|k,v| b = validate(v); @@buckets[k] = Mountpoint.new(b) }
-        else m = mountpoint.to_s; b = validate(m); @@buckets[m] = Mountpoint.new(b)
+        when Array then mountpoint.each {|m| b = validate(m); @@buckets[m] = Mountpoint.new(m, b) }
+        when Hash  then mountpoint.each {|k,v| b = validate(v); @@buckets[k] = Mountpoint.new(k, b) }
+        else m = mountpoint.to_s; b = validate(m); @@buckets[m] = Mountpoint.new(m, b)
         end
       end
 
-      def mountpoint(key)
+      def mountpoint(key = @@buckets.keys[0])
         @@buckets[key]
       end
 
-      def exist?(path)
-        @@buckets.values.find {|b| b.exist?(path) }
+      def exist?(path, mp = mountpoint)
+        mp.exist?(path)
       end
       alias :find :exist?
 
-      def delete(path, options = {})
-        @@buckets.values.each {|b| b.delete(path, options) }
+      def delete(path, options = {}, mp = mountpoint)
+        mp.delete(path, options)
       end
 
-      def write(path, options_or_data = nil, options = nil)
-        @@buckets.values.each {|b| b.write(path, options_or_data, options) }
+      def write(path, options_or_data = nil, options = {}, mp = mountpoint)
+        mp.write(path, options_or_data, options)
+      end
+
+      def each(&block)
+        if block_given?
+          @@buckets.each{|b| yield b }
+        else
+          Enumerator.new(@@buckets.values)
+        end
       end
 
       private

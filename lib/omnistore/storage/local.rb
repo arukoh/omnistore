@@ -6,8 +6,17 @@ module OmniStore
       class Mountpoint
         attr_reader :dir
 
-        def initialize(dir)
-          @dir = dir
+        def initialize(name, dir)
+          @name = name
+          @dir  = dir
+        end
+
+        def name
+          @name
+        end
+
+        def url
+          "file://#{dir}"
         end
 
         def exist?(path)
@@ -34,22 +43,30 @@ module OmniStore
       def mount!
         @@mountpoint = {}
         case mountpoint = OmniStore::Config.mountpoint
-        when Array then mountpoint.each {|m| validate(m); @@mountpoint[m] = Mountpoint.new(m) }
-        when Hash  then mountpoint.each {|k,v| validate(v); @@mountpoint[k] = Mountpoint.new(v) }
-        else m = mountpoint.to_s; validate(m); @@mountpoint[m] = Mountpoint.new(m)
+        when Array then mountpoint.each {|m| validate(m); @@mountpoint[m] = Mountpoint.new(File.basename(m), m) }
+        when Hash  then mountpoint.each {|k,v| validate(v); @@mountpoint[k] = Mountpoint.new(k, v) }
+        else m = mountpoint.to_s; validate(m); @@mountpoint[m] = Mountpoint.new(File.basename(m), m)
         end
       end
 
-      def mountpoint(key)
+      def mountpoint(key = @@mountpoint.keys[0])
         @@mountpoint[key]
       end
 
-      def exist?(path)
-        @@mountpoint.values.find {|m| m.exist?(path) }
+      def exist?(path, mp = mountpoint)
+        mp.exist?(path)
       end
 
-      def delete(path)
-        @@mountpoint.values.each {|m| m.delete(path) }
+      def delete(path, mp = mountpoint)
+        mp.delete(path)
+      end
+
+      def each(&block)
+        if block_given?
+          @@mountpoint.each{|m| yield m }
+        else
+          Enumerator.new(@@mountpoint.values)
+        end
       end
 
       private
