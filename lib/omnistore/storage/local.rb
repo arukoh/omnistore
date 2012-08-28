@@ -30,6 +30,7 @@ module OmniStore
         def move(src, dest, other = self, options = {})
           src_path = expand(src)
           dest_path = expand(dest, other.dir)
+          FileUtils.mkdir_p(File.dirname(dest_path)) if options[:force]
           FileUtils.mv(src_path, dest_path, options)
         end
 
