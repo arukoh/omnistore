@@ -16,7 +16,7 @@ module OmniStore
         end
 
         def url
-          "file://#{dir}"
+          "file://#{dir}/"
         end
 
         def exist?(path)

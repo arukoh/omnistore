@@ -76,7 +76,7 @@ describe OmniStore::Storage::Local do
 
     context 'when single mountpoit' do
       its(:name) { should eq File.basename(MOUNTPOINT) }
-      its(:url)  { should eq "file://#{File.expand_path(MOUNTPOINT)}" }
+      its(:url)  { should eq "file://#{File.expand_path(MOUNTPOINT)}/" }
     end
 
     context 'when double mountpoint' do
@@ -87,7 +87,7 @@ describe OmniStore::Storage::Local do
       subject { OmniStore::Storage::Local.mountpoint(:b) }
 
       its(:name) { should eq :b }
-      its(:url)  { should eq "file://#{File.expand_path(TMPDIR)}" }
+      its(:url)  { should eq "file://#{File.expand_path(TMPDIR)}/" }
     end
 
     describe '#move' do
