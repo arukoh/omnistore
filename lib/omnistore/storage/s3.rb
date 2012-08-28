@@ -35,7 +35,7 @@ module OmniStore
 
         def move(src, dest, other = self, options = {})
           options[:bucket_name] = other.bucket.name
-          bucket.objects[key].move_to(dest, options)
+          bucket.objects[src].move_to(dest, options)
         end
       end
 
