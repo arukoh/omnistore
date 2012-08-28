@@ -90,6 +90,20 @@ describe OmniStore::Storage::Local do
       its(:url)  { should eq "file://#{File.expand_path(TMPDIR)}/" }
     end
 
+    describe '#url' do
+      let(:key) { nil }
+      subject { OmniStore::Storage::Local.mountpoint.url(key) }
+
+      context 'when key is not specified' do
+        it { should eq "file://#{File.expand_path(MOUNTPOINT)}/" }
+      end
+
+      context 'when key specified' do
+        let(:key) { 'test' }
+        it { should eq "file://#{File.expand_path(MOUNTPOINT)}/#{key}" }
+      end
+    end
+
     describe '#move' do
       let(:src)   { t = Tempfile.new(TEST_FILENAME, MOUNTPOINT); File.basename(t.path) }
       let(:dst)   { TEST_FILENAME + Time.new.to_i.to_s }

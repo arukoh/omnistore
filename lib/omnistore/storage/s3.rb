@@ -17,8 +17,12 @@ module OmniStore
           @name
         end
 
-        def url
-          bucket.url
+        def url(key = nil, options = {})
+          if key
+            bucket.objects[key].public_url(:secure => options[:secure] != false).to_s
+          else
+            bucket.url
+          end
         end
 
         def exist?(key)
