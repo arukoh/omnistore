@@ -8,10 +8,9 @@ require 'aws-sdk'
 require 'omnistore'
 
 TMPDIR   = ENV['TMPDIR'] || ENV['TMP'] || ENV['TEMP'] || '/tmp'
-#MOUNTPOINT = File.join(File.dirname(__FILE__), '/../data')
 MOUNTPOINT = File.expand_path(File.join(File.dirname(__FILE__), '/../data'))
 TEST_FILENAME = 'test.txt'
-AWS_BUCKET = ENV['AWS_BUCKET']
+AWS_BUCKET = 'AWS_BUCKET'
 
 OmniStore.configure do |config|
   config.storage = 'local'

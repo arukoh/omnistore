@@ -33,6 +33,10 @@ module OmniStore
           bucket.objects[key].delete(options)
         end
 
+        def read(key, options = {}, &block)
+          bucket.objects[key].read(options, &block)
+        end
+
         def write(key, options_or_data = nil, options = {})
           bucket.objects[key].write(options_or_data, options)
         end
@@ -63,6 +67,10 @@ module OmniStore
 
       def delete(path, options = {}, mp = mountpoint)
         mp.delete(path, options)
+      end
+
+      def read(path, options = {}, mp = mountpoint, &block)
+        mp.read(path, options, &block)
       end
 
       def write(path, options_or_data = nil, options = {}, mp = mountpoint)
