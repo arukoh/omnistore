@@ -1,63 +1,33 @@
 require 'aws-sdk'
+require 'omnistore/storage/s3/mountpoint'
 
 module OmniStore
   module Storage
     module S3
       extend self
 
-      class Mountpoint
-        attr_reader :bucket
-
-        def initialize(name, bucket)
-          @name   = name
-          @bucket = bucket
-        end
-
-        def name
-          @name
-        end
-
-        def url(key = nil, options = {})
-          if key
-            bucket.objects[key].public_url(:secure => options[:secure] != false).to_s
-          else
-            bucket.url
-          end
-        end
-
-        def exist?(key)
-          bucket.objects[key].exists?
-        end
-
-        def delete(key, options = {})
-          bucket.objects[key].delete(options)
-        end
-
-        def read(key, options = {}, &block)
-          bucket.objects[key].read(options, &block)
-        end
-
-        def write(key, options_or_data = nil, options = {})
-          bucket.objects[key].write(options_or_data, options)
-        end
-
-        def move(src, dest, other = self, options = {})
-          options[:bucket_name] = other.bucket.name
-          bucket.objects[src].move_to(dest, options)
-        end
-      end
-
       def mount!
-        @@buckets = {}
+        @@keys = {}
         case mountpoint = OmniStore::Config.mountpoint
-        when Array then mountpoint.each {|m| b = validate(m); @@buckets[m] = Mountpoint.new(m, b) }
-        when Hash  then mountpoint.each {|k,v| b = validate(v); @@buckets[k] = Mountpoint.new(k, b) }
-        else m = mountpoint.to_s; b = validate(m); @@buckets[m] = Mountpoint.new(m, b)
+        when Array
+          mountpoint.each do |m|
+            b = validate(m)
+            @@keys[m] = {:name => m, :bucket => b}
+          end
+        when Hash
+          mountpoint.each do |k,v|
+            b = validate(v)
+            @@keys[k] = {:name => k, :bucket => b}
+          end
+        else
+          m = mountpoint.to_s
+          b = validate(m)
+          @@keys[m] = {:name => m, :bucket => b}
         end
       end
 
-      def mountpoint(key = @@buckets.keys[0])
-        @@buckets[key]
+      def mountpoint(key = @@keys.keys.first)
+        new_mountpoint(key)
       end
 
       def exist?(path, mp = mountpoint)
@@ -79,9 +49,9 @@ module OmniStore
 
       def each(&block)
         if block_given?
-          @@buckets.each{|b| yield b }
+          @@keys.each{|key| yield new_mountpoint(key) }
         else
-          Enumerator.new(@@buckets.values)
+          Enumerator.new(@@keys.map{|key| new_mountpoint(key)})
         end
       end
 
@@ -100,6 +70,11 @@ module OmniStore
         opts[:s3_endpoint]       = OmniStore::Config.endpoint   if OmniStore::Config.endpoint
         opts[:proxy_uri]         = OmniStore::Config.proxy_uri  if OmniStore::Config.proxy_uri
         opts
+      end
+
+      def new_mountpoint(key)
+        return nil unless @@keys.key?(key)
+        Mountpoint.new(@@keys[key][:name], @@keys[key][:bucket])
       end
     end
   end
