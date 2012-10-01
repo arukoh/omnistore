@@ -26,13 +26,13 @@ module OmniStore
           FileUtils.rm(expand(path))
         end
 
-        def delete_if(dir = nil, &block)
+        def delete_if(dir = '', &block)
           Dir.glob("#{expand(dir)}/**/*").each do |path|
             if yield(path)
               if File.directory?(path)
-                FileUtils.rm(path)
-              else
                 FileUtils.rmdir(path)
+              else
+                FileUtils.rm(path)
               end
             end
           end
