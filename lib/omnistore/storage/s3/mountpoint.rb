@@ -29,6 +29,10 @@ module OmniStore
           bucket.objects[key].delete(options)
         end
 
+        def delete_if(key_prefix = nil, &block)
+          bucket.objects.with_prefix(key_prefix).delete_if(&block)
+        end
+
         def read(key, options = {}, &block)
           bucket.objects[key].read(options, &block)
         end

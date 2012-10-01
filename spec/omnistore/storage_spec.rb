@@ -9,6 +9,7 @@ describe OmniStore::Storage do
   end
 
   it 'should return storage for s3' do
+    AWS::S3::Bucket.any_instance.stub(:exists?).and_return(true)
     OmniStore::Config.storage = 's3'
     OmniStore::Storage.remount!
     OmniStore::Storage.storage.should == OmniStore::Storage::S3 

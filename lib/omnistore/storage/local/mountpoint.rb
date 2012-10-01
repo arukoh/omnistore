@@ -26,6 +26,18 @@ module OmniStore
           FileUtils.rm(expand(path))
         end
 
+        def delete_if(dir = nil, &block)
+          Dir.glob("#{dir}/**/*").each do |path|
+            if yield(path)
+              if File.directory?(path)
+                FileUtils.rm(path)
+              else
+                FileUtils.rmdir(path)
+              end
+            end
+          end
+        end
+
         def read(path, options = {}, &block)
           size = options[:chunk_size] || MEGABYTE
           open(expand(path), 'rb') do |f|
