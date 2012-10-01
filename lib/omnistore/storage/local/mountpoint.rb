@@ -27,7 +27,7 @@ module OmniStore
         end
 
         def delete_if(dir = '', &block)
-          Dir.glob("#{expand(dir)}/**/*").each do |path|
+          Dir.glob("#{expand(dir)}/**/*").reverse.each do |path|
             if yield(path.sub(/^#{@dir}\//, ''))
               if File.directory?(path)
                 FileUtils.rmdir(path)
