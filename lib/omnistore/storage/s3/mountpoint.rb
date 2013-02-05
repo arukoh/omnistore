@@ -47,6 +47,11 @@ module OmniStore
           options[:bucket_name] = other.bucket.name
           bucket.objects[src].move_to(dest, options)
         end
+
+        def copy(src, dest, other = self, options = {})
+          options[:bucket] = other.bucket
+          bucket.objects[src].copy_to(dest, options)
+        end
       end
     end
   end

@@ -69,7 +69,13 @@ module OmniStore
           FileUtils.mv(src_path, dest_path, options)
         end
 
-        private
+        def copy(src, dest, other = self, options = {})
+          src_path = expand(src)
+          dest_path = expand(dest, other.dir)
+          FileUtils.copy(src_path, dest_path, options)
+        end
+
+       private
 
         def expand(path, dir = @dir)
           File.expand_path(path, dir)

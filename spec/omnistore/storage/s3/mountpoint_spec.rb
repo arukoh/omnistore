@@ -116,4 +116,38 @@ describe 'OmniStore::Storage::S3::Mountpoint' do
     end
   end
 
+  describe '#copy' do
+    let(:src) { TEST_FILENAME }
+    let(:dst)   { TEST_FILENAME + Time.new.to_i.to_s }
+    let(:other) { OmniStore::Storage::S3.mountpoint(:a) }
+    subject { lambda { OmniStore::Storage::S3.mountpoint.copy(src, dst, other) } }
+
+    before do
+      OmniStore::Config.mountpoint = { :a => AWS_BUCKET, :b => AWS_BUCKET + 'b' }
+      OmniStore::Storage.remount!
+    end
+
+    context 'when copy to same mountpoint' do
+      before do
+        AWS::S3::S3Object.any_instance.stub(:copy_to).with do |*args|
+          args[0].should eq dst
+          args[1][:bucket].name.should eq AWS_BUCKET
+          true
+        end
+      end
+      it { should_not raise_error } 
+    end
+
+    context 'when copy to another mountpoint' do
+      before do
+        AWS::S3::S3Object.any_instance.stub(:copy_to).with do |*args|
+          args[0].should eq dst
+          args[1][:bucket].name.should eq other.bucket.name
+          true
+        end
+      end
+      let(:other) { OmniStore::Storage::S3.mountpoint(:b) }
+      it { should_not raise_error } 
+    end
+  end
 end

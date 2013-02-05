@@ -59,4 +59,31 @@ describe OmniStore::Storage::Local::Mountpoint do
       it { should_not raise_error } 
     end
   end
+
+  describe '#copy' do
+    let(:src)   { t = Tempfile.new(TEST_FILENAME, MOUNTPOINT); File.basename(t.path) }
+    let(:dst)   { TEST_FILENAME + Time.new.to_i.to_s }
+    let(:other) { OmniStore::Storage::Local.mountpoint(:a) }
+    subject { lambda { OmniStore::Storage::Local.mountpoint.copy(src, dst, other) } }
+
+    before do
+      OmniStore::Config.mountpoint = { :a => MOUNTPOINT, :b => TMPDIR }
+      OmniStore::Storage.remount!
+    end
+    after { other.delete(dst) rescue nil }
+
+    context 'when specified a file path that does not exist' do
+      let(:src) { TEST_FILENAME + Time.new.to_i.to_s }
+      it { should raise_error } 
+    end
+
+    context 'when specified a file path that exist' do
+      it { should_not raise_error } 
+    end
+
+    context 'when copy to another mountpoint' do
+      let(:other) { OmniStore::Storage::Local.mountpoint(:b) }
+      it { should_not raise_error } 
+    end
+  end
 end
