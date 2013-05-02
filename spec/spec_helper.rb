@@ -2,7 +2,7 @@
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'rubygems'
-require 'rspec'
+require 'bundler/setup'
 require 'tempfile'
 require 'aws-sdk'
 require 'omnistore'
