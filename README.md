@@ -20,6 +20,10 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+## Code Status
+
+* [![Build Status](https://travis-ci.org/arukoh/omnistore.png?branch=master)](https://travis-ci.org/arukoh/omnistore)
+
 ## Contributing
 
 1. Fork it
