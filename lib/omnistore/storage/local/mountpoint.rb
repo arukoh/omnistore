@@ -53,8 +53,10 @@ module OmniStore
           opts = convert_args_to_options_hash(options_or_data, options)
           size = opts[:chunk_size] || MEGABYTE
           data = convert_data_to_io_obj(opts)
+          expanded_path = expand(path)
+          FileUtils.mkdir_p(File.dirname(expanded_path)) if options[:force]
           begin
-            open(expand(path), 'wb') do |f|
+            open(expanded_path, 'wb') do |f|
               f.write(data.read(size)) until data.eof?
             end
           ensure
