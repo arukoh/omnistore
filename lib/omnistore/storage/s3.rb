@@ -59,7 +59,7 @@ module OmniStore
 
       def validate(name)
         bucket = AWS::S3.new(options).buckets[name]
-        raise OmniStore::Errors::InvalidMountpoint unless bucket.exists?
+        raise OmniStore::Errors::InvalidMountpoint, "Bucket '#{name}' is not found." unless bucket.exists?
         bucket
       end
 
