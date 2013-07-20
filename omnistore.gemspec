@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "omnistore"
   gem.require_paths = ["lib"]
   gem.version       = OmniStore::VERSION
-  gem.license      = 'MIT'
+  gem.license       = 'MIT'
 
   gem.add_dependency "aws-sdk", ">=1.6.0"
   gem.add_dependency "activesupport"
