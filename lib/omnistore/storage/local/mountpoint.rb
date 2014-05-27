@@ -75,10 +75,12 @@ module OmniStore
         end
 
         def copy(src, dest, other = self, options = {})
+          force = options[:force]
           opts = options.dup
           opts.delete_if {|k, v| !FileUtils.have_option?(:copy, k)}
           src_path = expand(src)
           dest_path = expand(dest, other.dir)
+          FileUtils.mkdir_p(File.dirname(dest_path)) if force
           FileUtils.copy(src_path, dest_path, opts)
         end
 
