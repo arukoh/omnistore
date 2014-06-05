@@ -11,17 +11,17 @@ module OmniStore
         case mountpoint = OmniStore::Config.mountpoint
         when Array
           mountpoint.each do |m|
-            b = validate(m)
+            b = bucket(m)
             @@keys[m] = {:name => m, :bucket => b}
           end
         when Hash
           mountpoint.each do |k,v|
-            b = validate(v)
+            b = bucket(v)
             @@keys[k] = {:name => k, :bucket => b}
           end
         else
           m = mountpoint.to_s
-          b = validate(m)
+          b = bucket(m)
           @@keys[m] = {:name => m, :bucket => b}
         end
       end
@@ -56,6 +56,11 @@ module OmniStore
       end
 
       private
+
+      def bucket(name)
+        item = @@keys.values.find{|item| item[:bucket] && item[:bucket].name == name }
+        item ? item[:bucket] : validate(name)
+      end
 
       def validate(name)
         bucket = AWS::S3.new(options).buckets[name]
