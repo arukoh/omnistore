@@ -2,6 +2,10 @@
 
 TODO: Write a gem description
 
+[![Gem Version](https://badge.fury.io/rb/omnistore.svg)](http://badge.fury.io/rb/omnistore)
+[![Build Status](https://travis-ci.org/arukoh/omnistore.png?branch=master)](https://travis-ci.org/arukoh/omnistore)
+[![Dependency Status](https://gemnasium.com/arukoh/omnistore.svg)](https://gemnasium.com/arukoh/omnistore)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -19,10 +23,6 @@ Or install it yourself as:
 ## Usage
 
 TODO: Write usage instructions here
-
-## Code Status
-
-* [![Build Status](https://travis-ci.org/arukoh/omnistore.png?branch=master)](https://travis-ci.org/arukoh/omnistore)
 
 ## Contributing
 
