@@ -1,6 +1,6 @@
 # OmniStore
 
-TODO: Write a gem description
+Omnistore is the storage library. support s3 and local now.
 
 [![Gem Version](https://badge.fury.io/rb/omnistore.svg)](http://badge.fury.io/rb/omnistore)
 [![Build Status](https://travis-ci.org/arukoh/omnistore.png?branch=master)](https://travis-ci.org/arukoh/omnistore)
