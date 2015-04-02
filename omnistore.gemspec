@@ -16,7 +16,8 @@ Gem::Specification.new do |gem|
   gem.version       = OmniStore::VERSION
   gem.license       = 'MIT'
 
-  gem.add_dependency "aws-sdk", ">=1.6.0"
+  gem.add_dependency "aws-sdk", "~> 1.6"
+  gem.add_dependency "aws-sdk-resources", "~> 2"
   gem.add_dependency "activesupport"
 
   gem.add_development_dependency "rake", ">= 0.8.7"

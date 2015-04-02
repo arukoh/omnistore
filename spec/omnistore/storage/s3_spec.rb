@@ -2,6 +2,14 @@ require 'spec_helper'
 
 describe "OmniStore::Storage::S3" do
 
+  it "should not be occurred using AWS::S3" do
+    expect { AWS::S3 }.not_to raise_error(NameError)
+  end
+
+  it "should not be occurred using Aws::S3" do
+    expect { Aws::S3 }.not_to raise_error(NameError)
+  end
+
   before(:each) do
     AWS::S3::Bucket.any_instance.stub(:exists?).and_return(true)
     OmniStore::Config.storage = 's3'

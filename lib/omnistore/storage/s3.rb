@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'aws-sdk-resources'
 require 'omnistore/storage/s3/mountpoint'
 
 module OmniStore
