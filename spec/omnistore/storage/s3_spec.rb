@@ -38,6 +38,7 @@ describe "OmniStore::Storage::S3" do
   describe '#mountpoint' do
     subject { OmniStore::Storage::S3.mountpoint }
     it { should be_a OmniStore::Storage::S3::Mountpoint }
+    it { expect(subject.bucket.client.config.to_h).to include(s3_signature_version: :v4) }
   end
 
   describe '#exist?' do
@@ -46,12 +47,12 @@ describe "OmniStore::Storage::S3" do
 
     context 'when specified a object that does not exist' do
       before { AWS::S3::S3Object.any_instance.stub(:exists?).and_return(false) }
-      it { should be_false } 
+      it { should be_false }
     end
 
     context 'when specified a object that exist' do
       before { AWS::S3::S3Object.any_instance.stub(:exists?).and_return(true) }
-      it { should be_true } 
+      it { should be_true }
     end
   end
 
@@ -60,7 +61,7 @@ describe "OmniStore::Storage::S3" do
     before { OmniStore::Storage::S3::Mountpoint.any_instance.stub(:delete).with(src, {}) }
     subject { lambda { OmniStore::Storage::S3.delete(src) } }
 
-    it { should_not raise_error } 
+    it { should_not raise_error }
   end
 
   describe '#read' do
@@ -78,7 +79,7 @@ describe "OmniStore::Storage::S3" do
     before { OmniStore::Storage::S3::Mountpoint.any_instance.stub(:write).with(src, nil, {}) }
     subject { lambda { OmniStore::Storage::S3.write(src) } }
 
-    it { should_not raise_error } 
+    it { should_not raise_error }
   end
 
   describe '#each' do

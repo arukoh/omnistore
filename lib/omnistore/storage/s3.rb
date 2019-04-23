@@ -70,7 +70,7 @@ module OmniStore
       end
 
       def options
-        opts = {}
+        opts = { s3_signature_version: :v4 }
         opts[:access_key_id]     = OmniStore::Config.access_key if OmniStore::Config.access_key
         opts[:secret_access_key] = OmniStore::Config.secret_key if OmniStore::Config.secret_key
         opts[:s3_endpoint]       = OmniStore::Config.endpoint   if OmniStore::Config.endpoint
