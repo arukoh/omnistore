@@ -2,15 +2,10 @@ before_install:
   - gem install bundler -N -v 1.16.0
 
 rvm:
- - 1.9.3
  - 2.0.0
  - 2.1.0
  - 2.2.0
-
-notifications:
-  webhooks:
-    urls:
-      - https://hooker-arukoh.herokuapp.com/travis
-    on_success: always
-    on_failure: always
-    on_start: false
+ - 2.3.0
+ - 2.4.0
+ - 2.5.0
+ - 2.6.0

@@ -18,7 +18,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "aws-sdk", "~> 1.6"
   gem.add_dependency "aws-sdk-resources", "~> 2"
-  gem.add_dependency "activesupport", "~> 4"
 
   gem.add_development_dependency "rake", "< 11.0"
   gem.add_development_dependency "rspec", "~> 2.4"
