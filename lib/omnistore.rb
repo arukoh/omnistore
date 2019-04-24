@@ -1,5 +1,4 @@
 require 'logger'
-require 'active_support/inflector'
 require "omnistore/version"
 require 'omnistore/config'
 require 'omnistore/errors'
