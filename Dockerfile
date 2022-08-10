@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby:3-alpine3.16
 
 ENV RUNTIME_PACKAGES "git libxml2-dev libxslt-dev"
 ENV DEV_PACKAGES "build-base"
